@@ -1,6 +1,6 @@
 # cse455-final-project
 
-(1) Abatract
+(1) Abstract
 
 (2) Problem Setup
 
