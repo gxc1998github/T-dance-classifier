@@ -17,8 +17,8 @@ data_path = './data/partial_dataset'
 def load_datasets():
   # get full dataset
   dataset_transform = transforms.Compose([
-    transforms.Resize(360),       # 1920 x 1080 OR 1280 x 720 -> 640 x 360
-    transforms.CenterCrop(360),   # 640 x 360 -> 360 x 360
+    transforms.Resize(36),       # 1920 x 1080 OR 1280 x 720 -> 64 x 36
+    transforms.CenterCrop(36),   # 64 x 36 -> 36 x 36
     transforms.ToTensor()
   ])
   dataset = datasets.ImageFolder(data_path, transform=dataset_transform)
@@ -38,7 +38,7 @@ def load_datasets():
   testing_dataset_loader = data.DataLoader(dataset, sampler=testing_sampler)
 
   # return training/testing dataset loaders
-  return {'train': training_dataset_loader, 'test': testing_dataset_loader, 'classes': training_dataset_loader.dataset.classes}
+  return {'train': training_dataset_loader, 'test': testing_dataset_loader, 'classes': training_dataset_loader.dataset.classes} 
 
 def train(net, dataloader, epochs=1, lr=0.01, momentum=0.9, decay=0.0):
   net.to(device)
@@ -88,7 +88,7 @@ def accuracy(net, dataloader):
 
       # increment total predictions
       total += labels.size(0)
-
+ 
       # update correct predictions based on results
       correct += (predicted == labels).sum().item()
 
@@ -110,9 +110,10 @@ frame_cnn = frame_nn.CNN()
 
 # train model on training dataset
 print("training model...")
-frame_losses = train(frame_cnn, data['train'], epochs=5, lr=0.01)
+frame_losses = train(frame_cnn, data['train'], epochs=1, lr=0.01)
 print("done!")
 
 # check accuracy
+print("checking accuracy...")
 print("Training accuracy: %f" % accuracy(frame_cnn, data['train']))
 print("Testing accuracy: %f" % accuracy(frame_cnn, data['test']))

@@ -6,27 +6,27 @@ class CNN(nn.Module):
   def __init__(self):
     super(CNN, self).__init__()
 
-    # input: 360 x 360 x 3 image
+    # input: 36 x 36 x 3 image
     # filters: 16, 3 x 3 x 3
-    # output: 180 x 180 x 16 image
+    # output: 18 x 18 x 16 image
     self.conv_1 = nn.Conv2d(3, 16, 3, stride=2, padding=1)
     self.batchnorm_1 = nn.BatchNorm2d(16)
 
-    # input: 180 x 180 x 16 image
+    # input: 18 x 18 x 16 image
     # filters: 32, 3 x 3 x 16
-    # output: 90 x 90 x 32 image
+    # output: 9 x 9 x 32 image
     self.conv_2 = nn.Conv2d(16, 32, 3, stride=2, padding=1)
     self.batchnorm_2 = nn.BatchNorm2d(32)
 
-    # input: 90 x 90 x 32 image
+    # input: 9 x 9 x 32 image
     # filters: 64, 3 x 3 x 32
-    # output: 45 x 45 x 64 image
-    self.conv_3 = nn.Conv2d(32, 64, 3, stride=2, padding=1)
-    self.batchnorm_3 = nn.BatchNorm2d(64)
+    # output: 3 x 3 x 96 image
+    self.conv_3 = nn.Conv2d(32, 96, 3, stride=3, padding=1)
+    self.batchnorm_3 = nn.BatchNorm2d(96)
 
-    # input: 129600 vector
+    # input: 864 vector
     # output: 16 vector
-    self.fully_connected = nn.Linear(129600, 16)
+    self.fully_connected = nn.Linear(864, 16)
 
 
   def forward(self, x):
