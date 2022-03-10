@@ -12,28 +12,30 @@ import frame_nn
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-data_path = './data/rgb'
-minidata_path = './data/temp'
+data_path = './data/partial_dataset'
 
 def load_datasets():
   # get full dataset
   dataset_transform = transforms.Compose([
-    transforms.Resize(360), # 1920 x 1080 OR 1280 x 720 -> 640 x 360
+    transforms.Resize(360),       # 1920 x 1080 OR 1280 x 720 -> 640 x 360
+    transforms.CenterCrop(360),   # 640 x 360 -> 360 x 360
     transforms.ToTensor()
   ])
-  dataset = datasets.ImageFolder(minidata_path, transform=dataset_transform)
+  dataset = datasets.ImageFolder(data_path, transform=dataset_transform)
   total_size = len(dataset)
 
-  # split the dataset for training (80%) and testing (20%) using random sampling
+  # randomize the indices for sampling from the dataset
   indices = list(range(total_size))
-  midpoint = total_size // 5
   np.random.shuffle(indices)
+
+  # split the dataset for training (80%) and testing (20%) using random sampling
+  midpoint = total_size // 5
   training_sampler = data.sampler.SubsetRandomSampler(indices[midpoint:])
   testing_sampler = data.sampler.SubsetRandomSampler(indices[:midpoint])
 
   # get training/testing dataset loaders
-  training_dataset_loader = data.DataLoader(dataset, batch_size=64, sampler=training_sampler)
-  testing_dataset_loader = data.DataLoader(dataset, batch_size=64, sampler=testing_sampler)
+  training_dataset_loader = data.DataLoader(dataset, sampler=training_sampler)
+  testing_dataset_loader = data.DataLoader(dataset, sampler=testing_sampler)
 
   # return training/testing dataset loaders
   return {'train': training_dataset_loader, 'test': testing_dataset_loader, 'classes': training_dataset_loader.dataset.classes}
@@ -109,6 +111,7 @@ frame_cnn = frame_nn.CNN()
 # train model on training dataset
 print("training model...")
 frame_losses = train(frame_cnn, data['train'], epochs=5, lr=0.01)
+print("done!")
 
 # check accuracy
 print("Training accuracy: %f" % accuracy(frame_cnn, data['train']))
