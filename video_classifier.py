@@ -44,11 +44,9 @@ def predict_frame(image):
 
   # input/output -> get labels
   input = tensor_image.to(device)
-  outputs = model(input)
-  print(outputs)
+  outputs = model(input[None, ...])
   _, predicted = torch.max(outputs, 1)
-  print(predicted)
-  return "hi"
+  return classes[predicted[0]]
   
 
 # given a path to a directory containing frames of a video,
@@ -64,5 +62,9 @@ def predict_video(frame_dir):
   return labels
 
 for frame_dir in get_frame_dirs():
+  video_name = os.path.basename(frame_dir).replace("_", " ").replace("vf", "").strip()
+
   labels = predict_video(frame_dir)
-  print(labels[0:10])
+  most_common_label = max(set(labels), key=labels.count)
+
+  print("Classifying '", video_name, "' as", most_common_label)

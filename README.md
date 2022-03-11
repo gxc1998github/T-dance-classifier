@@ -47,15 +47,13 @@ The images are sorted into 16 categories:
 
 We chose this dataset because the dataset was extensive, with many images for each category of dance, and because the images were pre-sorted into categories, and had the same aspect ratio.
 
-However, we found that using the full datatset to test and train our model was inefficient: not only was loading the dataset time-consuming due to the large number of images, but training the model on those images was also very slow due to the large size of the images.  
-To make loading the dataset more efficient, we used a bash script to sample only a portion of the images from the larger dataset (this script was run 16 times, replacing `category_name` with the name of the folder corresponding to a different cateory each time):
+However, we found that using the full datatset to test and train our model was inefficient: due to the large number of images in the dataset, and the high resolution of those images, it took a very long time to train and test the model (> 3 hours).  
+To reduce the number of images in the dataset, we used a bash script to sample only a portion of the images from the larger dataset (this script was run 16 times, replacing `category_name` with the name of the folder corresponding to a different cateory each time):
 ```
 for file in `find ./rgb/category_name -type f | awk 'NR %28 == 0'`; do cp $file ./partial_dataset/category_name ; done
 ```
-This gave us a dataset containing 14,730 images, sampled uniformly from the original dataset (not in clumps to avoid skewed data).
-
-To make training the model more efficient, we scaled the images down to 640x360. Because every image had the same aspect ratio, regardless of size, this was fairly straightforward, and we didn't need to worry about any warping or distortion.  
-Additionally, we noticed that the model was significantly more efficient with square images, so we also cropped the images (centered) to 360x360.
+This gave us a dataset containing 14,730 images, sampled uniformly from the original dataset (we chose not to sample in clumps in order to retrieve a variety of image data).
+To reduce the resolution of the images, we scaled the images down to 64x36. Because every image had the same aspect ratio, regardless of size, this was fairly straightforward, and we didn't need to worry about any warping or distortion. Additionally, we noticed that the model was significantly more efficient with square images, so we also cropped the images (centered) to 36x36.
 
 ### Dataset 2: Full videos
 The second dataset we used is a custom dataset that we created by retrieving and processing dance videos from Youtube.
@@ -63,16 +61,16 @@ The second dataset we used is a custom dataset that we created by retrieving and
 We began by gathering a variety of dancing videos that fell both inside and outside of the 16 categories of dance that are included in our training dataset.
 Using the pytube library, we downloaded Youtube videos as mp4 files with the desired resolution and frame rate. We decided on resolution of 1920x1080, which matched the aspect ratio and quality of the images in the training dataset, which would make it easier to run our model on them.
 
-We also used the OpenCV library was then to split the newly downloaded video into indivual .png files, thus forming our testing set. We wanted to explore different ways of selecting the frames to use for the dataset in order to best split a video into its individual movements.
-We considered selecting every frame or every n-th frame of the video, in addition to selecting frames of the video based on how different they were from the previously selected frame. The reasoning behind the last choice was that the frames for a single dance movement would all be relatively similar to each other, so we could determine when the video showed a different move by looking for frames that were above a certain threshold in terms of difference.
+We also used the OpenCV library was then to split the newly downloaded video into indivual jpg files, thus forming our testing set. We wanted to explore different ways of selecting the frames to use for the dataset in order to best split a video into its individual movements. We ended up splitting the video by frame (keep every 40th frame)
 
 ---
 
-## Technique
+## Techniques
 
 ---
 
 ## Additional Info
+A lot of the time on this project was spent figuring out how to minimize runtime while maximizing accuracy. Ideally, we would train and test our model on the full dataset with relatively high-resolution images; however, due to our technical limitations, we decided to sacrifice accuracy in order to finish the project on time.
 
 ---
 

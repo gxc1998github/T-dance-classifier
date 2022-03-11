@@ -13,7 +13,7 @@ frame_dir = os.path.join('data', 'video_frames')
 # link:         A string in the form of a url
 # output path:  Stores the video in the path /data/videos/
 def download_video(link):
-    #Process the url through pytube
+    # Process the url through pytube
     yt = YouTube(link) 
     title = yt.title
 
@@ -24,18 +24,18 @@ def download_video(link):
         if re.match(valid_chars, char):
             title_formatted = title_formatted + char
 
-    #Rename the video based on the first 5 words of the YouTube video's title
+    # Rename the video based on the first 5 words of the YouTube video's title
     name_arr = title_formatted.split()
     final_name = "_".join(name_arr[0:min(5, len(name_arr))]) + ".mp4"
 
-    #Filter the parameters of the outputed video and download with new name
+    # Filter the parameters of the outputed video and download with new name
     try:
         yt.streams.filter(adaptive = True).first().download(output_path = video_dir, filename = final_name)
     except:
         print("Some Error!")
     print('Task Completed!')
 
-#Creates a directory
+# Creates a directory
 def create_dir(path):
     try:
         if not os.path.exists(path):
@@ -43,10 +43,10 @@ def create_dir(path):
     except OSError:
         print(f"ERROR: creating directory with name {path}")
 
-#Split video into individual frames as .jpgs
-#video_path:    The path to find where the video is stored
-#gap:           The gap between frame collection. A gap = 1 means all frames are saved,
-#               a gap = 24 means every 24 frames are saved.
+# Split video into individual frames as .jpgs
+# video_path:    The path to find where the video is stored
+# gap:           The gap between frame collection. A gap = 1 means all frames are saved,
+#                a gap = 24 means every 24 frames are saved.
 
 def save_frame(video_path, gap):
     name = "vf_" + os.path.basename(video_path)[:-4]
@@ -74,9 +74,9 @@ def save_frame(video_path, gap):
 
 if __name__ == "__main__":
 
-    #download_video("https://www.youtube.com/watch?v=jjDYW46PjA8")
-    #download_video("https://www.youtube.com/watch?v=V32zWkB1MiY")
-    #download_video("https://www.youtube.com/watch?v=zV1qLYukTH8")
+    # download_video("https://www.youtube.com/watch?v=jjDYW46PjA8")
+    # download_video("https://www.youtube.com/watch?v=V32zWkB1MiY")
+    # download_video("https://www.youtube.com/watch?v=zV1qLYukTH8")
 
     video_paths = [os.path.join(video_dir, filename) for filename in os.listdir(video_dir)]
 
