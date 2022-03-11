@@ -8,6 +8,7 @@ __pycache__/
 
 # datasets
 data/datasets/partial_dataset/
+data/datasets/full_set
 
 # Distribution / packaging
 .Python
