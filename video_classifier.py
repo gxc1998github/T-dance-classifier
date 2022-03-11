@@ -16,19 +16,21 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = torch.load('frame_model.pth')
 model.eval()
 
-video_list_path = './data/videos'
-base_data_path = './data/video_frames/'
+video_dir = os.path.join('data', 'videos')
+frame_dir = os.path.join('data', 'video_frames')
 
 classes = ['ballet', 'break', 'cha', 'flamenco', 'foxtrot', 'pasodoble', 'quickstep', 'rumba', 'samba', 'square', 'swing', 'tango', 'tap']
 
-# given a directory of videos,
-# return a list of paths to the directories containing those videos' frames
-def get_full_data_paths():
-  full_data_paths = []
-  video_list = os.listdir(video_list_path)
-  for video in video_list:
-    full_data_paths.append(base_data_path + video[:-4])
-  return full_data_paths
+# return a list of paths to the directories containing the videos' frames
+def get_frame_dirs():
+  video_paths = [os.path.join(video_dir, filename) for filename in os.listdir(video_dir)]
+
+  frame_paths = []
+  for video_path in video_paths:
+    name = "vf_" + os.path.basename(video_path)[:-4]
+    save_path = os.path.join(frame_dir, name)
+    frame_paths.append(save_path)
+  return frame_paths
 
 # given a PIL image, predict its style
 def predict_frame(image):
@@ -42,7 +44,7 @@ def predict_frame(image):
 
   # input/output -> get labels
   input = tensor_image.to(device)
-  output = model(input)
+  outputs = model(input)
   print(outputs)
   _, predicted = torch.max(outputs, 1)
   print(predicted)
@@ -51,15 +53,16 @@ def predict_frame(image):
 
 # given a path to a directory containing frames of a video,
 # predict its dance style
-def predict_video(data_path):
-  images = os.listdir(data_path)
+def predict_video(frame_dir):
+  print("using frames from", frame_dir)
+  frames = os.listdir(frame_dir)
   labels = []
-  for image in images:
-    pil_image = Image.open(data_path + "/" + image)
-    label = predict_frame(pil_image)
+  for frame in frames:
+    pil_frame = Image.open(os.path.join(frame_dir, frame))
+    label = predict_frame(pil_frame)
     labels.append(label)
   return labels
 
-for data_path in get_full_data_paths():
-  labels = predict_video(data_path)
+for frame_dir in get_frame_dirs():
+  labels = predict_video(frame_dir)
   print(labels[0:10])
