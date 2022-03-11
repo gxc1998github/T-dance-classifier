@@ -9,7 +9,6 @@ import re
 video_dir = os.path.join('data', 'videos')
 frame_dir = os.path.join('data', 'video_frames')
 
-
 # Download a link from youtube and store the video as an .mp4
 # link:         A string in the form of a url
 # output path:  Stores the video in the path /data/videos/

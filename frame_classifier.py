@@ -104,7 +104,6 @@ def accuracy(net, dataloader):
 # get training/testing datsets
 print("getting datasets...")
 data = load_datasets()
-print(data['classes'])
 
 # get nn model
 print("getting model...")
