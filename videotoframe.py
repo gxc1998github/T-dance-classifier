@@ -28,14 +28,14 @@ def save_frame(video_path, save_dir, gap):
             break
 
         if idx == 0:
-            cv2.imwrite(f"{save_path}/{idx}.png", frame)
+            cv2.imwrite(f"{save_path}/{idx}.jpg", frame)
             #im = load_image(f"{save_path}/{idx}.png")
             #im = nn_resize(im, im.w//40, im.h//40)
             #save_image(im, f"{save_path}2/{idx}")
 
         else:
             if idx % gap == 0:
-                cv2.imwrite(f"{save_path}/{idx}.png", frame)
+                cv2.imwrite(f"{save_path}/{idx}.jpg", frame)
                 #im = load_image(f"{save_path}/{idx}.png")
                 #im = nn_resize(im, im.w//40, im.h//40)
                 #save_image(im, f"{save_path}2/{idx}")

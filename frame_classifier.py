@@ -12,7 +12,7 @@ import frame_nn
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-data_path = './data/partial_dataset'
+data_path = './data/datasets/partial_dataset'
 
 def load_datasets():
   # get full dataset
@@ -103,6 +103,7 @@ def accuracy(net, dataloader):
 # get training/testing datsets
 print("getting datasets...")
 data = load_datasets()
+print(data['classes'])
 
 # get nn model
 print("getting model...")
@@ -117,3 +118,6 @@ print("done!")
 print("checking accuracy...")
 print("Training accuracy: %f" % accuracy(frame_cnn, data['train']))
 print("Testing accuracy: %f" % accuracy(frame_cnn, data['test']))
+
+# save model
+torch.save(frame_cnn, 'frame_model.pth')
