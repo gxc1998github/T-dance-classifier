@@ -1,5 +1,5 @@
 # Dance Classifier
-Deepti Ramani, Gareth Coad, Dylin Stoen
+Deepti Ramani, Gareth Coad
 
 ---
 
@@ -8,12 +8,16 @@ In this project, we analyze videos of dance routines in order to classify them w
 
 We use a convolutional neural network to classify individual dance frames, then run that network over the frames of the video being analyzed in order to determine its overall style. We also explore different ways of retrieving frames from the videos to determine which method results in the most accurate overall classification.
 
-REWRITE!!!
+Our project was ultimately unsuccessful: our model was unable to classify dance videos with substantial accuracy. In the future, we plan to train our model with a more extensive dataset to see if that improves the results at all.
 
 ---
 
 ## Problem
-For our project, we wanted to be able to classify a dance video with one of 16 different dance styles based on the movements performed in the video. We broke this down into three subproblems: classifying individual movements with a dance style, breaking the video down into frames, and classifying the video based on what category the majority of its frames fall into.
+For our project, we wanted to be able to classify a dance video with one of 16 different dance styles based on the movements performed in the video. We broke this down into three subproblems:
+
+  (1) Classifying individual movements by dance style with the use of a neural network, then training a model with a pre-existing data set  
+  (2) Collecting a video from YouTube and breaking it into individual frames, allowing us to form our own data set  
+  (3) Classifying the video data with our model and outputting a suggested dance style based on which category the majority of its frames fall into
 
 ---
 
@@ -66,6 +70,34 @@ We also used the OpenCV library was then to split the newly downloaded video int
 ---
 
 ## Techniques
+### Neural Network
+We used a convolutional neural network for this project. The model was trained using a partial version of the Let's Dance dataset, with the training code adapted from a PyTorch tutorial by Joe Redmon (see References for more details). The design of the neural network can be found in the `frame_nn` python script, and the training and testing code can be found in the `frame_classifier` python script.
+
+`frame_nn` shows the break down of the neural network layers and the downsizing and reshaping that occurs at each filter. We attempted to optimize the layer count and the reshaping that occured but due to time constraints and the data set sizes this was a challenge and would need revisiting in future work.  
+`frame_classifer` handles the majority of processing, by receiving the data, forming the model through training on the dancing data set, and finally saving the model for later use
+
+### Video Processing
+
+Our video processing was handled by the `video_processor` python script. The script consists of three functions: 
+
+  (1) `download_video`, which accepts the URL of a YouTube video and processes the video with the aid of the `pytube` library, then downloads it as a 1080p mp4 file with a formatted filename  
+  (2) `create_dir`, which accepts a path and creates a directory at the given path  
+  (3) `save_frame`, which accepts a path to a video and a chosen gap between each saved frame, creates a directory to store the frames in, and saves every `gap`-th frame as a 1920x180 jpg image
+
+### Generating Classification Output
+
+The `video_classifier` python script is the final step of our project and uses the trained model to discern if an inputted YouTube video is one of our 16 dance styles. It is made up of three functions:
+
+  (1) `get_frame_dirs`, which retrieves the paths to the directories that contain the frames for each saved video  
+  (2) `predict_frame`, which takes a PIL image and returns its most likely classification (dance move) by running the saved model on it  
+  (3) `predict_video`, which takes in a directory to the frames of a video and classifies the video with a dance style based on the most common classification of its frames
+
+---
+
+## Evaluation
+Overall, the model was highly inaccurate: when calculating the accuracy of the model in `frame_classifier`, it had a training accuracy of ~0.21 and a testing accuracy of ~0.14. These are very low numbers, and are likely due to having to run the model on a partial version of the dataset with severely scaled-down images. Had we had the time to train the model on a more extensive dataset with higher resolution images, we believe the model would have performed significantly better, and plan to continue testing this theory in the future.
+
+Additionally, when running the video classifier using the aforementioned model on our downloaded video samples, all of the videos were incorrectly classified.
 
 ---
 
@@ -77,5 +109,7 @@ A lot of the time on this project was spent figuring out how to minimize runtime
 ## References
 * Code for classifying individual movements was adapted from a [PyTorch tutorial](https://github.com/pjreddie/uwimg/blob/main/tutorial1%20-%20pytorch-introduction.ipynb) for CSE 455 (Computer Vision) by Joe Redmon
 * The training data for the movement classifier was taken from the [Let's Dance: Learning From Online Dance Videos dataset](https://www.cc.gatech.edu/cpl/projects/dance/) from Georgia Tech
+
+---
 
 ## Demo video
