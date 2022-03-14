@@ -65,6 +65,9 @@ for frame_dir in get_frame_dirs():
   video_name = os.path.basename(frame_dir).replace("_", " ").replace("vf", "").strip()
 
   labels = predict_video(frame_dir)
-  most_common_label = max(set(labels), key=labels.count)
+  # most_common_label = max(set(labels), key=labels.count)
 
-  print("Classifying '", video_name, "' as", most_common_label)
+  for label in np.unique(labels):
+    num_curr_label = labels.count(label)
+    label_perc = labels.count(label) / len(labels)
+    print("%s: %.4f" % (label, label_perc))
