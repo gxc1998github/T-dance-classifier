@@ -113,3 +113,9 @@ A lot of the time on this project was spent figuring out how to minimize runtime
 ---
 
 ## Demo video
+https://github.com/deeptii-20/cse455-final-project/blob/main/cse455-final-project-video.mp4
+
+---
+
+## Code
+Code for this project can be found [here](https://github.com/deeptii-20/cse455-final-project).
